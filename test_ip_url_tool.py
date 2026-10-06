@@ -1,6 +1,7 @@
 import socket
 
 from ip_url_tool import classify_url_type, resolve_ip_url, resolve_url
+from web_server import lookup_target
 
 
 def test_classify_web_url():
@@ -89,3 +90,35 @@ def test_resolve_url_handles_dns_failure(monkeypatch):
     assert result["host"] == "unknown.example"
     assert result["ips"] == []
     assert result["status"] == "unresolved"
+
+
+def test_lookup_target_resolves_url(monkeypatch):
+    monkeypatch.setattr(
+        socket,
+        "getaddrinfo",
+        lambda host, port, type: [
+            (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("192.0.2.30", 0))
+        ],
+    )
+
+    result = lookup_target("https://api.example.com")
+
+    assert result["host"] == "api.example.com"
+    assert result["ips"] == ["192.0.2.30"]
+    assert result["type"] == "API"
+    assert result["status"] == "resolved"
+
+
+def test_lookup_target_reverse_resolves_ip(monkeypatch):
+    monkeypatch.setattr(
+        socket,
+        "gethostbyaddr",
+        lambda ip: ("dns.google", [], [ip]),
+    )
+
+    result = lookup_target("8.8.8.8")
+
+    assert result["host"] == "dns.google"
+    assert result["ips"] == ["8.8.8.8"]
+    assert result["type"] == "Website"
+    assert result["status"] == "resolved"

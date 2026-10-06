@@ -56,6 +56,14 @@ Print the result as JSON:
 python3 ip_url_tool.py "https://api.example.com/v1" --json
 ```
 
+Launch the local web interface:
+
+```bash
+python3 web_server.py
+```
+
+Then open `http://127.0.0.1:8000` in a browser. Stop the server with `Ctrl+C`.
+
 ## Troubleshooting
 
 - If `python3` is not found, install it with `sudo apt install python3`.

@@ -30,6 +30,16 @@ JSON output:
 python ip_url_tool.py https://api.example.com/v1 --json
 ```
 
+## Web interface
+
+Run the local web interface with Python 3.10 or newer:
+
+```bash
+python3 web_server.py
+```
+
+Open `http://127.0.0.1:8000` in a browser. The server binds to localhost by default. To select a different local port, use `python3 web_server.py --port 8080`.
+
 ## Notes
 
 - Forward and reverse DNS lookups use Python's standard `socket` library.
